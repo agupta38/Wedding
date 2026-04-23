@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aarushi & Hari — Save the Date</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=DM+Sans:wght@400;500;600;700&family=Caveat:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="progress-bar"><div class="progress-bar-fill" id="progressFill"></div></div>
+
+<!-- Side nav dots -->
+<nav class="nav-dots" id="navDots">
+  <button class="nav-dot" data-target="scene-hero"><span class="label">Hero</span></button>
+  <button class="nav-dot" data-target="scene-bumble"><span class="label">The Match</span></button>
+  <button class="nav-dot" data-target="scene-toronto"><span class="label">Toronto</span></button>
+  <button class="nav-dot" data-target="scene-flight"><span class="label">Flight</span></button>
+  <button class="nav-dot" data-target="scene-twostates"><span class="label">2 States</span></button>
+  <button class="nav-dot" data-target="scene-dehradun"><span class="label">Dehradun</span></button>
+  <button class="nav-dot" data-target="scene-savedate"><span class="label">Save the Date</span></button>
+  <button class="nav-dot" data-target="scene-countdown"><span class="label">Countdown</span></button>
+  <button class="nav-dot" data-target="scene-playlist"><span class="label">Playlist</span></button>
+  <button class="nav-dot" data-target="scene-rsvp"><span class="label">Details</span></button>
+</nav>
+
+<!-- Tweaks toggle button -->
+<button id="tweaksToggle" style="position:fixed; bottom:24px; right:24px; z-index:200; width:44px; height:44px; border-radius:50%; background:var(--ink); color:var(--cream); border:none; cursor:pointer; box-shadow:var(--shadow-md); font-size:18px; display:none;">✦</button>
+
+<div id="tweaks-panel">
+  <h4>Tweaks</h4>
+  <div class="tweak-row">
+    <span>Accent palette</span>
+    <div class="tweak-swatches" id="paletteSwatches">
+      <div class="tweak-swatch active" data-palette="warm" style="background:linear-gradient(135deg,#E8833A 50%,#C41E3A 50%)"></div>
+      <div class="tweak-swatch" data-palette="cool" style="background:linear-gradient(135deg,#5B6B4A 50%,#DAA520 50%)"></div>
+      <div class="tweak-swatch" data-palette="rose" style="background:linear-gradient(135deg,#C41E3A 50%,#DAA520 50%)"></div>
+    </div>
+  </div>
+  <div class="tweak-row">
+    <span>Reduced motion</span>
+    <input type="checkbox" id="reducedMotion" style="accent-color:var(--rose)">
+  </div>
+  <div class="tweak-row">
+    <span>Show guides</span>
+    <input type="checkbox" id="showGuides" style="accent-color:var(--rose)">
+  </div>
+</div>
+
+<!-- Mount React app -->
+<div id="app"></div>
+
+<!-- Edit mode config (for tweaks) -->
+<script>
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accentPalette": "warm",
+  "groomName": "Hari",
+  "brideName": "Aarushi",
+  "weddingDate": "2027-05-17",
+  "weddingCity": "Dehradun, India",
+  "firstMet": "December 2023"
+}/*EDITMODE-END*/;
+</script>
+
+<!-- React + Babel -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<!-- Shared SVG decor + hooks -->
+<script type="text/babel" src="components/decor.jsx"></script>
+<script type="text/babel" src="components/hooks.jsx"></script>
+
+<!-- Scenes -->
+<script type="text/babel" src="scenes/Hero.jsx"></script>
+<script type="text/babel" src="scenes/Bumble.jsx"></script>
+<script type="text/babel" src="scenes/Toronto.jsx"></script>
+<script type="text/babel" src="scenes/Flight.jsx"></script>
+<script type="text/babel" src="scenes/TwoStates.jsx"></script>
+<script type="text/babel" src="scenes/Dehradun.jsx"></script>
+<script type="text/babel" src="scenes/SaveDate.jsx"></script>
+<script type="text/babel" src="scenes/Countdown.jsx"></script>
+<script type="text/babel" src="scenes/Playlist.jsx"></script>
+<script type="text/babel" src="scenes/RSVP.jsx"></script>
+
+<!-- App -->
+<script type="text/babel" src="app.jsx"></script>
+
+</body>
+</html>
