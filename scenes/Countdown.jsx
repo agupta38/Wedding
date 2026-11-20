@@ -5,7 +5,7 @@ const CountdownScene = () => {
   const [time, setTime] = React.useState({ d: 0, h: 0, m: 0, s: 0 });
 
   React.useEffect(() => {
-    const target = new Date('2027-05-17T10:00:00').getTime();
+    const target = new Date('2027-05-17T10:00:00+05:30').getTime();
     const tick = () => {
       const now = Date.now();
       const diff = Math.max(0, target - now);
@@ -37,7 +37,7 @@ const CountdownScene = () => {
           until we all get <span style={{ color: 'var(--marigold)' }}>jet-lagged</span>
         </h2>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 'clamp(10px, 2vw, 30px)', marginTop: 50 }}>
+        <div className="countdown-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 'clamp(10px, 2vw, 30px)', marginTop: 50 }}>
           {units.map((u, i) => (
             <div key={u.label} style={{
               border: '1.5px solid var(--cream)',

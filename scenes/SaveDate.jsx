@@ -20,7 +20,7 @@ const SaveDateScene = () => {
         transition: 'all 0.1s linear',
       }}>
         {/* Main save the date card */}
-        <div style={{
+        <div className="save-date-card" style={{
           background: 'var(--cream)',
           border: '2px solid var(--ink)',
           padding: 'clamp(40px, 6vw, 80px) clamp(30px, 5vw, 70px)',
@@ -95,7 +95,7 @@ const SaveDateScene = () => {
           </div>
 
           {/* Wax-seal-style stamp */}
-          <div style={{
+          <div className="save-date-seal" style={{
             position: 'absolute',
             top: -30, right: -30,
             opacity: stampIn,

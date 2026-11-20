@@ -2,13 +2,7 @@
 const RSVPScene = () => {
   const ref = React.useRef(null);
   const inView = useInView(ref);
-  const [email, setEmail] = React.useState('');
-  const [submitted, setSubmitted] = React.useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (email && email.includes('@')) setSubmitted(true);
-  };
+  const formURL = 'https://docs.google.com/forms/d/e/1FAIpQLSdzJIhOR29E_9nI58E2w3MI1Mn7yTtnQa-3q1mzpaoQ9lSwxA/viewform';
 
   return (
     <section ref={ref} id="scene-rsvp" className="scene" data-screen-label="10 Details" style={{ padding: 0, background: 'var(--cream-deep)' }}>
@@ -32,46 +26,17 @@ const RSVPScene = () => {
         <div style={{ textAlign: 'center', maxWidth: 720 }}>
           <div className="font-mono" style={{ fontSize: 11, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--ink-soft)' }}>The Last Word</div>
           <h2 className="font-display" style={{ fontSize: 'clamp(40px, 6.5vw, 80px)', fontStyle: 'italic', fontWeight: 400, lineHeight: 1, marginTop: 6 }}>
-            Details <span style={{ color: 'var(--rose)' }}>to follow</span>
+            A little yes for <span style={{ color: 'var(--rose)' }}>our big day</span>
           </h2>
           <div className="font-hand" style={{ fontSize: 26, marginTop: 16, color: 'var(--ink-soft)', maxWidth: 540, margin: '16px auto 0' }}>
-            a formal invitation with venue, timings, dress code, and all the chaos is on its way. drop your email and we'll keep you in the loop.
+            17 May 2027 · Dehradun. Let us know if you can join us — just four quick questions, one reply per household.
           </div>
         </div>
 
-        {/* Email form */}
-        {!submitted ? (
-          <form onSubmit={handleSubmit} style={{ marginTop: 40, display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
-            <input
-              type="email"
-              placeholder="your.best@email.com"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              style={{
-                padding: '14px 18px',
-                border: '1.5px solid var(--ink)',
-                background: 'var(--cream)',
-                fontFamily: 'DM Sans',
-                fontSize: 14,
-                minWidth: 280,
-                outline: 'none',
-              }}
-            />
-            <button type="submit" className="btn">
-              Keep me in the loop
-              <span>→</span>
-            </button>
-          </form>
-        ) : (
-          <div style={{ marginTop: 40, padding: 24, background: 'var(--marigold)', border: '1.5px solid var(--ink)', textAlign: 'center', position: 'relative' }}>
-            <div className="font-display" style={{ fontSize: 28, fontStyle: 'italic', fontWeight: 500 }}>
-              you're on the list ✦
-            </div>
-            <div className="font-hand" style={{ fontSize: 20, marginTop: 4 }}>
-              see you in dehradun
-            </div>
-          </div>
-        )}
+        <div className="rsvp-embed">
+          <iframe title="Aarushi and Hari wedding RSVP — four quick questions" src={`${formURL}?embedded=true`} loading="lazy">Loading the RSVP form…</iframe>
+          <p className="rsvp-alternative">Prefer a separate window? <a href={formURL} target="_blank" rel="noopener noreferrer">Open the RSVP form</a></p>
+        </div>
 
         {/* Three info cards */}
         <div style={{ marginTop: 60, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 24, width: '100%', maxWidth: 900 }}>

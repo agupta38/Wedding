@@ -7,7 +7,7 @@ const TwoStatesScene = () => {
   const rowsProgress = remap(progress, 0.25, 0.95);
 
   const comparisons = [
-    { topic: 'HER MORNING', north: 'Chai + parantha', south: 'Filter kaapi + idli' },
+    { topic: 'HER MORNING', north: 'Lassi and namkeen', south: 'Filter kaapi + idli' },
     { topic: 'THE LANGUAGE', north: 'Hindi / Punjabi', south: 'Tamil' },
     { topic: 'THE WEDDING STYLE', north: 'Shaadi, 5 days', south: 'Kalyanam, 3 days' },
     { topic: 'SPICE LEVEL', north: 'Spicy', south: 'SPICIER' },
@@ -16,8 +16,9 @@ const TwoStatesScene = () => {
   ];
 
   return (
-    <section ref={ref} id="scene-twostates" className="scene scene-tall" data-screen-label="05 Two States" style={{ padding: 0, minHeight: '180vh' }}>
+    <section ref={ref} id="scene-twostates" className="scene scene-tall animated-scene" data-screen-label="05 Two States" style={{ padding: 0, minHeight: '180vh' }}>
       <div className="sticky-wrap">
+        <PinnedCanvas className="states-canvas" height={900} mobileHeight={740}>
         <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
 
           {/* Split panels */}
@@ -50,10 +51,10 @@ const TwoStatesScene = () => {
           }} />
 
           {/* Content */}
-          <div style={{ position: 'relative', width: '100%', height: '100%', color: 'var(--cream)', padding: '4vh 4vw', zIndex: 5 }}>
+          <div className="states-content" style={{ position: 'relative', width: '100%', height: '100%', color: 'var(--cream)', padding: '4vh 4vw', zIndex: 5 }}>
 
             {/* Header */}
-            <div style={{ textAlign: 'center', marginBottom: 20, opacity: splitProgress }}>
+            <div className="states-heading" style={{ textAlign: 'center', marginBottom: 20, opacity: splitProgress }}>
               <div className="font-mono" style={{ fontSize: 11, letterSpacing: '0.3em', textTransform: 'uppercase', opacity: 0.9 }}>Chapter Four</div>
               <h2 className="font-display" style={{ fontSize: 'clamp(40px, 6.5vw, 80px)', fontStyle: 'italic', fontWeight: 400, lineHeight: 1 }}>
                 Two states, one love story
@@ -64,7 +65,7 @@ const TwoStatesScene = () => {
             </div>
 
             {/* Column headers */}
-            <div style={{ display: 'flex', marginTop: 10, opacity: splitProgress }}>
+            <div className="states-columns" style={{ display: 'flex', marginTop: 10, opacity: splitProgress }}>
               <div style={{ flex: 1, textAlign: 'center' }}>
                 <div className="font-display" style={{ fontSize: 'clamp(28px, 4vw, 44px)', fontStyle: 'italic', fontWeight: 500 }}>Aarushi</div>
                 <div className="font-mono" style={{ fontSize: 11, letterSpacing: '0.25em', opacity: 0.85 }}>DILLI · THE NORTH</div>
@@ -76,11 +77,11 @@ const TwoStatesScene = () => {
             </div>
 
             {/* Comparison rows */}
-            <div style={{ marginTop: 40, display: 'flex', flexDirection: 'column', gap: 14, maxWidth: 1100, margin: '40px auto 0' }}>
+            <div className="comparison-list" style={{ marginTop: 40, display: 'flex', flexDirection: 'column', gap: 14, maxWidth: 1100, margin: '40px auto 0' }}>
               {comparisons.map((c, i) => {
                 const rowP = remap(rowsProgress, i / comparisons.length * 0.85, (i + 1) / comparisons.length * 0.85);
                 return (
-                  <div key={i} style={{
+                  <div className="comparison-row" key={i} style={{
                     display: 'flex', alignItems: 'center',
                     opacity: rowP,
                     transform: `translateY(${(1 - rowP) * 30}px)`,
@@ -124,13 +125,14 @@ const TwoStatesScene = () => {
             </div>
 
             {/* Footer note */}
-            <div style={{ position: 'absolute', bottom: 24, left: 0, right: 0, textAlign: 'center', opacity: rowsProgress * 0.85 }}>
+            <div className="states-footer" style={{ position: 'absolute', bottom: 24, left: 0, right: 0, textAlign: 'center', opacity: rowsProgress * 0.85 }}>
               <div className="font-hand" style={{ fontSize: 26 }}>
                 opposites attract. spices stack. ✨
               </div>
             </div>
           </div>
         </div>
+        </PinnedCanvas>
       </div>
     </section>
   );

@@ -1,112 +1,117 @@
-// Scene 9: Playlist — the songs of their story
-const PlaylistScene = () => {
-  const ref = React.useRef(null);
-  const inView = useInView(ref);
-  const [playing, setPlaying] = React.useState(null);
+// Licensed Apple Music previews; full songs open on their official YouTube pages.
+const weddingSongs = [
+  {
+    "title": "Tum Se Hi",
+    "artist": "Pritam & Mohit Chauhan",
+    "note": "the one on the drive home",
+    "video": "mt9xg0mmt28",
+    "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e7/39/b8/e739b870-54a1-8f33-57d5-3817108b8bd9/mzaf_16925921654959290990.plus.aac.p.m4a",
+    "apple": "https://music.apple.com/in/album/tum-se-hi/1134725343?i=1134725347&uo=4"
+  },
+  {
+    "title": "Why This Kolaveri Di",
+    "artist": "Anirudh Ravichander & Dhanush",
+    "note": "hari made it iconic",
+    "video": "YR12Z8f1Dh8",
+    "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/1d/38/f4/1d38f427-0cd0-d96c-6f3d-af091bf795b7/mzaf_12602049532375607798.plus.aac.p.m4a",
+    "apple": "https://music.apple.com/in/album/why-this-kolaveri-di-3/520548806?i=520549421&uo=4"
+  },
+  {
+    "title": "Tum Hi Ho",
+    "artist": "Mithoon & Arijit Singh",
+    "note": "first dance contender",
+    "video": "Umqb9KENgmk",
+    "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/3a/8c/9b/3a8c9b0b-2def-750a-f615-1555bf941edf/mzaf_17229496441442805917.plus.aac.p.m4a",
+    "apple": "https://music.apple.com/in/album/tum-hi-ho/1073359412?i=1073359419&uo=4"
+  },
+  {
+    "title": "Chaiyya Chaiyya",
+    "artist": "Sukhwinder Singh & Sapna Awasthi",
+    "note": "baraat certified banger",
+    "video": "PXacOfTi4uA",
+    "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/81/6c/e7/816ce721-3a37-0e57-3aa7-c3e180c4b38c/mzaf_10595670915474775723.plus.aac.p.m4a",
+    "apple": "https://music.apple.com/in/album/chaiyya-chaiyya/1130322055?i=1130322151&uo=4"
+  },
+  {
+    "title": "Levitating",
+    "artist": "Dua Lipa",
+    "note": "the toronto era",
+    "video": "N000qglmmY0",
+    "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/59/dc/4d/59dc4dda-93ff-8f1c-c536-f005f6ea6af5/mzaf_3066686759813252385.plus.aac.p.m4a",
+    "apple": "https://music.apple.com/in/album/levitating/1538003494?i=1538003843&uo=4"
+  }
+];
 
-  const songs = [
-    { title: 'Tum Se Hi', artist: 'Jab We Met', note: 'the one on the drive home', dur: '4:59' },
-    { title: 'Why This Kolaveri Di', artist: 'Dhanush', note: 'hari made it iconic', dur: '4:12' },
-    { title: 'Tum Hi Ho', artist: 'Arijit Singh', note: 'first dance contender', dur: '4:22' },
-    { title: 'Chaiyya Chaiyya', artist: 'Sukhwinder Singh', note: 'baraat certified banger', dur: '6:51' },
-    { title: 'Jasmine Flower', artist: 'A.R. Rahman', note: 'south vibes, always', dur: '3:30' },
-    { title: 'Levitating', artist: 'Dua Lipa', note: 'the toronto era', dur: '3:24' },
-  ];
+const PlaylistScene = () => {
+  const [selected, setSelected] = React.useState(null);
+  const [status, setStatus] = React.useState('Choose a song for an audio preview.');
+  const [isPlaying, setIsPlaying] = React.useState(false);
+  const audio = React.useRef(null);
+  const selectedRef = React.useRef(null);
+  const requestRef = React.useRef(0);
+
+  React.useEffect(() => {
+    const element = audio.current;
+    return () => { requestRef.current += 1; element.pause(); };
+  }, []);
+
+  const chooseSong = async (index) => {
+    const element = audio.current;
+    if (selectedRef.current === index && !element.paused) {
+      element.pause();
+      return;
+    }
+    const request = ++requestRef.current;
+    if (selectedRef.current !== index) {
+      element.pause();
+      selectedRef.current = index;
+      setSelected(index);
+      element.src = weddingSongs[index].preview;
+      element.load();
+    }
+    setStatus('Loading audio preview…');
+    try {
+      await element.play();
+    } catch (error) {
+      if (request !== requestRef.current || error.name === 'AbortError') return;
+      setIsPlaying(false);
+      setStatus(error.name === 'NotAllowedError' ? 'Tap play in the audio controls to start.' : 'Audio could not load. Listen to the full song on YouTube below.');
+    }
+  };
 
   return (
-    <section ref={ref} id="scene-playlist" className="scene" data-screen-label="09 Playlist" style={{ padding: '10vh 5vw', background: 'var(--cream)', minHeight: '100vh' }}>
+    <section id="scene-playlist" className="scene" data-screen-label="09 Playlist" style={{ padding: '10vh 5vw', background: 'var(--cream)' }}>
       <div style={{ maxWidth: 900, margin: '0 auto' }}>
-
-        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20, marginBottom: 40 }}>
-          <div>
-            <div className="font-mono" style={{ fontSize: 11, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--ink-soft)' }}>Chapter Six</div>
-            <h2 className="font-display" style={{ fontSize: 'clamp(40px, 6.5vw, 80px)', fontStyle: 'italic', fontWeight: 400, lineHeight: 1, marginTop: 4 }}>
-              The <span style={{ color: 'var(--rose)' }}>soundtrack</span>
-            </h2>
-            <div className="font-hand" style={{ fontSize: 24, marginTop: 4, color: 'var(--ink-soft)' }}>
-              a playlist, mostly curated by aarushi
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'var(--ink)', color: 'var(--cream)', padding: '8px 14px' }}>
-            <div style={{ display: 'flex', gap: 3, alignItems: 'center', height: 18 }}>
-              {[0, 1, 2, 3].map(i => (
-                <div key={i} style={{
-                  width: 3,
-                  background: 'var(--marigold)',
-                  height: `${30 + Math.sin(Date.now() * 0.002 + i) * 30}%`,
-                  animation: `eq ${0.6 + i * 0.15}s ease-in-out infinite alternate`,
-                }} />
-              ))}
-            </div>
-            <span className="font-mono" style={{ fontSize: 10, letterSpacing: '0.2em' }}>NOW PLAYING</span>
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', background: 'var(--cream-deep)', border: '1.5px solid var(--ink)' }}>
-          {songs.map((s, i) => (
-            <div
-              key={i}
-              onClick={() => setPlaying(playing === i ? null : i)}
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '40px 40px 1fr auto 60px',
-                gap: 16,
-                alignItems: 'center',
-                padding: '16px 20px',
-                borderBottom: i === songs.length - 1 ? 'none' : '1px dashed var(--paper-line)',
-                cursor: 'pointer',
-                transition: 'all 0.25s ease',
-                background: playing === i ? 'var(--marigold)' : 'transparent',
-                opacity: inView ? 1 : 0,
-                transform: inView ? 'translateX(0)' : 'translateX(-20px)',
-                transitionDelay: `${i * 60}ms`,
-              }}
-              onMouseEnter={e => { if (playing !== i) e.currentTarget.style.background = 'rgba(218, 165, 32, 0.15)'; }}
-              onMouseLeave={e => { if (playing !== i) e.currentTarget.style.background = 'transparent'; }}
-            >
-              <div className="font-mono" style={{ fontSize: 12, color: 'var(--ink-soft)', textAlign: 'right' }}>
-                {String(i + 1).padStart(2, '0')}
-              </div>
-              <div style={{
-                width: 32, height: 32,
-                borderRadius: '50%',
-                background: 'var(--ink)',
-                color: 'var(--cream)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 10,
-              }}>
-                {playing === i ? '❚❚' : '▶'}
-              </div>
-              <div>
-                <div className="font-display" style={{ fontSize: 22, fontStyle: 'italic', fontWeight: 500, lineHeight: 1.1 }}>
-                  {s.title}
-                </div>
-                <div style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 2 }}>
-                  {s.artist}
-                </div>
-              </div>
-              <div className="font-hand" style={{ fontSize: 18, color: 'var(--rose)', textAlign: 'right' }}>
-                {s.note}
-              </div>
-              <div className="font-mono" style={{ fontSize: 12, color: 'var(--ink-soft)', textAlign: 'right' }}>
-                {s.dur}
-              </div>
+        <header className="scene-heading" style={{ textAlign: 'left', marginBottom: 32 }}>
+          <div className="eyebrow">Chapter Six</div>
+          <h2 className="font-display">The <span>soundtrack</span></h2>
+          <p className="font-hand">a playlist, mostly curated by aarushi</p>
+          <p className="playlist-help">Tap play for an audio preview. Open YouTube for the full song.</p>
+        </header>
+        <div className="playlist-list">
+          {weddingSongs.map((song, i) => (
+            <div className={`song-row ${selected === i && isPlaying ? 'is-playing' : ''}`} key={song.video}>
+              <button className="song-play" onClick={() => chooseSong(i)} aria-label={`${selected === i && isPlaying ? 'Pause' : 'Play preview of'} ${song.title}`} aria-pressed={selected === i && isPlaying} aria-controls="wedding-audio">
+                <span aria-hidden="true">{selected === i && isPlaying ? '❚❚' : '▶'}</span>
+              </button>
+              <div><div className="font-display song-title">{song.title}</div><div className="song-artist">{song.artist}</div><div className="font-hand song-note">{song.note}</div></div>
+              <a className="song-link" href={`https://www.youtube.com/watch?v=${song.video}`} target="_blank" rel="noopener noreferrer" aria-label={`Listen to ${song.title} on YouTube`}>Full song on YouTube</a>
             </div>
           ))}
         </div>
-
-        <div style={{ textAlign: 'center', marginTop: 24 }}>
-          <span className="font-hand" style={{ fontSize: 22, color: 'var(--ink-soft)' }}>
-            song requests? bring them to the sangeet.
-          </span>
+        <div className="music-player" hidden={selected === null}>
+          <p className="music-status" role="status" aria-live="polite">{selected !== null && <strong>{weddingSongs[selected].title} · </strong>}{status}</p>
+          <audio id="wedding-audio" ref={audio} controls preload="none" aria-label={selected === null ? 'Wedding song preview player' : `${weddingSongs[selected].title} audio preview`}
+            onPlaying={() => { setIsPlaying(true); setStatus('Playing audio preview'); }}
+            onPause={() => { setIsPlaying(false); setStatus('Paused'); }}
+            onWaiting={() => { setIsPlaying(false); setStatus('Loading audio preview…'); }}
+            onEnded={() => { setIsPlaying(false); setStatus('Preview finished. Open YouTube for the full song.'); }}
+            onError={() => { setIsPlaying(false); setStatus('Audio could not load. Listen to the full song on YouTube below.'); }} />
+          {selected !== null && <p className="music-credit">Preview courtesy of <a href={weddingSongs[selected].apple} target="_blank" rel="noopener noreferrer">Apple Music</a> · <a href={`https://www.youtube.com/watch?v=${weddingSongs[selected].video}`} target="_blank" rel="noopener noreferrer">Full song on YouTube</a></p>}
         </div>
+        <p className="font-hand" style={{ textAlign: 'center', marginTop: 24, fontSize: 24 }}>song requests? bring them to the sangeet.</p>
       </div>
-      <style>{`
-        @keyframes eq { from { height: 20%; } to { height: 90%; } }
-      `}</style>
     </section>
   );
 };
-
 window.PlaylistScene = PlaylistScene;

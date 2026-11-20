@@ -41,12 +41,13 @@ const BumbleScene = () => {
   const act45Active = progress >= 0.54 && progress < 0.84;
 
   return (
-    <section ref={ref} id="scene-bumble" className="scene scene-tall" data-screen-label="02 The Match" style={{ padding: 0, minHeight: '380vh' }}>
+    <section ref={ref} id="scene-bumble" className="scene scene-tall animated-scene" data-screen-label="02 The Match" style={{ padding: 0, minHeight: '380vh' }}>
       <div className="sticky-wrap">
+        <PinnedCanvas className="bumble-canvas" width={1000} height={800} mobileWidth={600} mobileHeight={800}>
         <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
 
           {/* Section header — swaps with progress */}
-          <div style={{ position: 'absolute', top: '6%', left: 0, right: 0, textAlign: 'center', zIndex: 5 }}>
+          <div className="bumble-heading" style={{ position: 'absolute', top: '6%', left: 0, right: 0, textAlign: 'center', zIndex: 5 }}>
             <div className="font-mono" style={{ fontSize: 11, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--ink-soft)', marginBottom: 8 }}>Chapter One</div>
             <h2 className="font-display" style={{ fontSize: 'clamp(32px, 5.5vw, 64px)', fontStyle: 'italic', fontWeight: 400, transition: 'opacity 0.3s ease' }} key={chapter}>
               {chapter.split(' ').map((w, i) => <span key={i}>{w === 'swipe' || w === 'hey.' || w === 'twist.' || w === 'thing.' ? <span style={{ color: 'var(--marigold-deep)' }}>{w}</span> : w}{' '}</span>)}
@@ -71,7 +72,7 @@ const BumbleScene = () => {
                 position: 'absolute',
                 left: '50%',
                 top: '50%',
-                transform: `translate(calc(-100% - ${100 - bumbleMatchProgress * 80}px), -50%) rotate(${-8 + bumbleMatchProgress * 8}deg)`,
+                transform: `translate(calc(-100% - ${100 - bumbleMatchProgress * 80}px * var(--phone-spread, 1)), -50%) rotate(${-8 + bumbleMatchProgress * 8}deg)`,
                 transition: 'transform 0.1s linear',
               }}>
                 <Phone name="Hari" age="28" tagline="South Indian. Loves filter coffee." accent="var(--marigold)" swipeRight={leftSwipe} matched={bumbleMatched} app="bumble" />
@@ -82,7 +83,7 @@ const BumbleScene = () => {
                 position: 'absolute',
                 left: '50%',
                 top: '50%',
-                transform: `translate(${100 - bumbleMatchProgress * 80}px, -50%) rotate(${8 - bumbleMatchProgress * 8}deg)`,
+                transform: `translate(calc(${100 - bumbleMatchProgress * 80}px * var(--phone-spread, 1)), -50%) rotate(${8 - bumbleMatchProgress * 8}deg)`,
                 transition: 'transform 0.1s linear',
               }}>
                 <Phone name="Aarushi" age="26" tagline="Dilli girl in the 6ix." accent="var(--rose)" swipeRight={rightSwipe} matched={bumbleMatched} app="bumble" />
@@ -137,7 +138,7 @@ const BumbleScene = () => {
               ]} show={heyBubbleIn} cringe={cringeReveal} />
 
               {/* Aarushi's reaction doodle */}
-              <div style={{
+              <div className="chat-reaction" style={{
                 position: 'absolute',
                 top: '50%', right: -240,
                 transform: `translate(${(1 - cringeReveal) * -30}px, -50%)`,
@@ -235,7 +236,7 @@ const BumbleScene = () => {
                 {/* Hari phone */}
                 <div style={{
                   position: 'absolute', left: '50%', top: '50%',
-                  transform: `translate(calc(-100% - ${100 - hingeMatchProgress * 80}px), -50%) rotate(${-6 + hingeMatchProgress * 6}deg)`,
+                  transform: `translate(calc(-100% - ${100 - hingeMatchProgress * 80}px * var(--phone-spread, 1)), -50%) rotate(${-6 + hingeMatchProgress * 6}deg)`,
                   transition: 'transform 0.1s linear',
                 }}>
                   <Phone name="Hari" age="28" tagline="Giving it another shot 🎯" accent="var(--sage)" swipeRight={remap(progress, 0.68, 0.74)} matched={hingeMatched} app="hinge" />
@@ -244,7 +245,7 @@ const BumbleScene = () => {
                 {/* Aarushi phone */}
                 <div style={{
                   position: 'absolute', left: '50%', top: '50%',
-                  transform: `translate(${100 - hingeMatchProgress * 80}px, -50%) rotate(${6 - hingeMatchProgress * 6}deg)`,
+                  transform: `translate(calc(${100 - hingeMatchProgress * 80}px * var(--phone-spread, 1)), -50%) rotate(${6 - hingeMatchProgress * 6}deg)`,
                   transition: 'transform 0.1s linear',
                 }}>
                   <Phone name="Aarushi" age="26" tagline="Okay fine, one more chance." accent="var(--rose)" swipeRight={remap(progress, 0.70, 0.76)} matched={hingeMatched} app="hinge" />
@@ -293,7 +294,7 @@ const BumbleScene = () => {
           )}
 
           {/* =============== ACT 6: Settled — Bar Volo =============== */}
-          <div style={{
+          <div className="bumble-ending" style={{
             position: 'absolute',
             bottom: '8%', left: 0, right: 0,
             textAlign: 'center',
@@ -310,6 +311,7 @@ const BumbleScene = () => {
           </div>
 
         </div>
+        </PinnedCanvas>
       </div>
     </section>
   );

@@ -27,8 +27,9 @@ const FlightScene = () => {
   }, [planeProgress, pathLen]);
 
   return (
-    <section ref={ref} id="scene-flight" className="scene scene-tall" data-screen-label="04 Flight" style={{ padding: 0, minHeight: '170vh', background: 'linear-gradient(180deg, #F5EFE6 0%, #EDE3D2 100%)' }}>
+    <section ref={ref} id="scene-flight" className="scene scene-tall animated-scene" data-screen-label="04 Flight" style={{ padding: 0, minHeight: '170vh', background: 'linear-gradient(180deg, #F5EFE6 0%, #EDE3D2 100%)' }}>
       <div className="sticky-wrap">
+        <PinnedCanvas className="flight-canvas" width={1000} height={800}>
         <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
 
           {/* Header */}
@@ -40,7 +41,7 @@ const FlightScene = () => {
           </div>
 
           {/* Globe area */}
-          <div style={{ position: 'relative', width: 'min(800px, 90vw)', height: 500 }}>
+          <div className="flight-globe" style={{ position: 'relative', width: 'min(800px, 90vw)', height: 500 }}>
             <svg viewBox="0 0 800 500" style={{ width: '100%', height: '100%', overflow: 'visible' }}>
               {/* Globe circle */}
               <defs>
@@ -132,10 +133,10 @@ const FlightScene = () => {
             </svg>
 
             {/* Boarding pass card */}
-            <div style={{
+            <div className="boarding-pass" style={{
               position: 'absolute',
               bottom: '-30px', left: '50%',
-              transform: `translate(-50%, ${(1-planeProgress)*40}px) rotate(-2deg)`,
+              transform: `translate(var(--boarding-x, -50%), ${(1-planeProgress)*40}px) rotate(-2deg)`,
               opacity: Math.min(1, planeProgress * 1.2),
               transition: 'all 0.1s linear',
             }}>
@@ -165,6 +166,7 @@ const FlightScene = () => {
           </div>
 
         </div>
+        </PinnedCanvas>
       </div>
     </section>
   );

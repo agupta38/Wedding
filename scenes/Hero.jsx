@@ -24,7 +24,7 @@ const HeroScene = () => {
       <div style={{ position: 'relative', width: '100%', maxWidth: 1100, textAlign: 'center' }}>
 
         {/* Top meta row */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24, marginBottom: 40, opacity: 0.75 }}>
+        <div className="hero-meta" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24, marginBottom: 40, opacity: 0.75 }}>
           <div style={{ width: 60, height: 1, background: 'var(--ink)' }} />
           <span className="font-mono" style={{ fontSize: 11, letterSpacing: '0.3em', textTransform: 'uppercase' }}>SAVE THE DATE · 17 MAY 2027</span>
           <div style={{ width: 60, height: 1, background: 'var(--ink)' }} />
@@ -74,7 +74,7 @@ const HeroScene = () => {
         </div>
 
         {/* Stamp */}
-        <div style={{ position: 'absolute', top: -20, right: '8%', transform: 'rotate(12deg)' }}>
+        <div className="hero-postmark" style={{ position: 'absolute', top: -20, right: '8%', transform: 'rotate(12deg)' }}>
           <Postmark text1="★ A + H ★" text2="EST. DEC 2023" size={120} color="var(--rose)" />
         </div>
       </div>

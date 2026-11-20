@@ -203,3 +203,81 @@ Object.assign(window, {
   Polaroid, HandArrow, ArrowHead, DoodleHeart, DoodleStar, DoodleSun, DoodleSparkle, DoodleSquiggle,
   PaisleyCorner, CNTower, Mountains, Plane, Stamp, Postmark, HandUnderline, DashedPath
 });
+
+// View from Lake Ontario: SkyDome west of the tower, financial district east.
+const TorontoSkyline = () => (
+  <svg className="toronto-skyline" viewBox="0 0 1200 500" role="img" aria-labelledby="toronto-skyline-title" preserveAspectRatio="xMidYMid meet">
+    <title id="toronto-skyline-title">Toronto waterfront skyline with the CN Tower, Rogers Centre stadium and downtown towers</title>
+    <defs>
+      <linearGradient id="toronto-sunset" x2="0" y2="1"><stop stopColor="#fce6ba"/><stop offset="1" stopColor="#d38b79"/></linearGradient>
+      <linearGradient id="toronto-lake" x2="0" y2="1"><stop stopColor="#bd8877"/><stop offset="1" stopColor="#e2b59c"/></linearGradient>
+    </defs>
+    <rect width="1200" height="500" fill="url(#toronto-sunset)"/>
+    <circle cx="470" cy="225" r="110" fill="#ffe7b2" opacity=".55"/>
+    <g fill="#9b6c60" opacity=".65">
+      <path d="M0 390V308h25v-35h28v117h12V282h35v108h15V248h28v142h17V290h44v100h15V263h32v127h20V297h42v93h18V325h50v65h30V286h38v104h30V310h31v80h35V278h32v112h30V294h45v96h32V264h34v126h30V300h44v90h34V267h30v123h24V293h40v97h24V310h38v80h24V280h40v110h24V322h36v68h18V300h55v90h20V283h40v107h24V315h50v75Z"/>
+    </g>
+    <g fill="#5b3d36" stroke="#e8b894" strokeWidth="1">
+      <path d="M26 400V330h33v70h14V294h39v106h17V311h38v89h14V275h25v125h18V321h42v79h18V303h26v97Z"/>
+      <path d="M604 400V245h38v155h15V210h48v190h18V271h36v129h13V188h52v212h16V229h48v171h14V177h48v223h20V245h48v155h16V285h35v115h15V317h45v83h18V280h37v120h20V320h50v80Z"/>
+      <path d="M650 210l31-16 31 16Z M777 188v-10h42v10 M908 177v-13h36v13"/>
+    </g>
+    <g stroke="#d7a17e" strokeWidth="2" opacity=".65">
+      {[620,672,688,786,804,852,872,917,933,978,998].map(x => <path key={x} d={`M${x} 280V395`}/>)}
+      {[300,325,350,375].map(y => <path key={y} d={`M607 ${y}H1040`}/>)}
+    </g>
+    {/* CN Tower: antenna, SkyPod, main observation deck and tapered tripod base. */}
+    <g fill="#392a26" stroke="#392a26" strokeLinejoin="round">
+      <path d="M515 43l2 71 3 25-2 114 12 146h-27l10-146-1-114 2-25Z"/>
+      <path d="M513 152h7l3 6-7 5-6-5Z"/>
+      <path d="M494 200q22-14 44 0l-4 15q-18 12-36 0Z"/>
+      <ellipse cx="516" cy="200" rx="23" ry="7" fill="#e7b58f"/>
+      <path d="M494 204h44M500 214h32" fill="none" stroke="#e7b58f" strokeWidth="2"/>
+      <path d="M512 257l-18 142h11l11-142 13 142h11l-20-142Z"/>
+    </g>
+    {/* Rogers Centre / SkyDome, unobscured to the left of the CN Tower. */}
+    <g stroke="#5b3d36" strokeWidth="2">
+      <path d="M295 379q4-65 91-69 86 3 93 69Z" fill="#efe4cd"/>
+      <path d="M309 376q13-53 77-60 64 7 79 60M338 376q5-50 48-60 40 11 48 60M386 316v60" fill="none" stroke="#b3a18c"/>
+      <path d="M289 377h197v26H289Z" fill="#ad8b76"/>
+      <path d="M301 389h173" stroke="#ead1ac" strokeDasharray="5 4" strokeWidth="5"/>
+    </g>
+    <path d="M0 404H1200V500H0Z" fill="url(#toronto-lake)"/>
+    <path d="M0 404H1200" stroke="#392a26" strokeWidth="5"/>
+    <g stroke="#f5d6b0" strokeWidth="2" opacity=".65"><path d="M310 430h150m-100 18h110m15-16h80m-60 29h70m280-21h140m-65 25h100m-810-23h110m-50 26h85"/></g>
+    <g fontFamily="JetBrains Mono, monospace" fontSize="12" fill="#392a26" letterSpacing="1">
+      <text x="385" y="463" textAnchor="middle">ROGERS CENTRE</text>
+      <text x="570" y="95">CN TOWER</text><path d="M558 101l-27 35" fill="none" stroke="#392a26" strokeDasharray="3 3"/>
+    </g>
+  </svg>
+);
+window.TorontoSkyline = TorontoSkyline;
+
+// The same animation canvas on every device; only its layout/scale adapts.
+const PinnedCanvas = ({ children, className = '', width = 1200, height = 800, mobileWidth = null, mobileHeight = 740 }) => {
+  const host = React.useRef(null);
+  const [size, setSize] = React.useState({ width, height });
+  React.useLayoutEffect(() => {
+    const element = host.current;
+    const measure = () => setSize({ width: element.clientWidth, height: element.clientHeight });
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+  const compact = size.width <= 700;
+  const minimumWidth = compact ? (mobileWidth || 320) : width;
+  const minimumHeight = compact ? mobileHeight : height;
+  const scale = Math.min(1, size.width / minimumWidth, size.height / minimumHeight);
+  // Expand the logical canvas after fitting so the pinned scene stays full bleed.
+  const canvasWidth = size.width / scale;
+  const canvasHeight = size.height / scale;
+  return (
+    <div ref={host} className="pinned-canvas">
+      <div className={`animation-canvas ${compact ? 'compact-canvas' : ''} ${className}`} data-canvas-scale={scale} style={{ width: canvasWidth, height: canvasHeight, '--canvas-scale': scale, transform: `scale(${scale})` }}>
+        {children}
+      </div>
+    </div>
+  );
+};
+window.PinnedCanvas = PinnedCanvas;

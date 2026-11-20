@@ -2,6 +2,17 @@
 const App = () => {
   const [activeScene, setActiveScene] = React.useState('scene-hero');
 
+  // JSX loads asynchronously; honor direct chapter links after the scenes mount.
+  React.useEffect(() => {
+    const hash = window.location.hash;
+    if (!hash) return;
+    document.fonts.ready.then(() => {
+      if (window.location.hash !== hash) return;
+      const scene = document.getElementById(hash.slice(1));
+      if (scene) scene.scrollIntoView({ behavior: 'instant', block: 'start' });
+    });
+  }, []);
+
   // Progress bar
   React.useEffect(() => {
     const fill = document.getElementById('progressFill');

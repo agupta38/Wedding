@@ -9,8 +9,9 @@ const DehradunScene = () => {
   const polaroidsIn = remap(progress, 0.5, 0.9);
 
   return (
-    <section ref={ref} id="scene-dehradun" className="scene scene-tall" data-screen-label="06 Dehradun" style={{ padding: 0, minHeight: '180vh' }}>
+    <section ref={ref} id="scene-dehradun" className="scene scene-tall dehradun-scene animated-scene" data-screen-label="06 Dehradun" data-scroll-progress={progress}>
       <div className="sticky-wrap">
+        <PinnedCanvas className="dehradun-canvas">
         <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
 
           {/* Sky - sunrise gradient */}
@@ -81,10 +82,10 @@ const DehradunScene = () => {
           </div>
 
           {/* Content */}
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '6vh 4vw', color: 'var(--cream)' }}>
+          <div className="dehradun-content" style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '6vh 4vw', color: 'var(--cream)' }}>
 
             {/* Header */}
-            <div style={{ textAlign: 'center', opacity: contentReveal, transform: `translateY(${(1-contentReveal)*-30}px)`, transition: 'all 0.1s linear' }}>
+            <div className="dehradun-heading" style={{ textAlign: 'center', opacity: contentReveal, transform: `translateY(${(1-contentReveal)*-30}px)`, transition: 'all 0.1s linear' }}>
               <div className="font-mono" style={{ fontSize: 11, letterSpacing: '0.3em', textTransform: 'uppercase', opacity: 0.85 }}>Chapter Five</div>
               <h2 className="font-display" style={{ fontSize: 'clamp(48px, 8vw, 120px)', fontStyle: 'italic', fontWeight: 400, lineHeight: 1, marginTop: 8, textShadow: '0 2px 20px rgba(44,24,16,0.4)' }}>
                 Welcome to <br/><span style={{ color: '#FCE4B0' }}>Dehradun</span>
@@ -95,46 +96,38 @@ const DehradunScene = () => {
             </div>
 
             {/* Side labels */}
-            <div style={{ position: 'absolute', left: '6%', top: '38%', opacity: contentReveal, color: '#FDFBF7' }}>
+            <div className="mountain-annotation" style={{ position: 'absolute', left: '6%', top: '38%', opacity: contentReveal, color: '#FDFBF7' }}>
               <svg width="120" height="80" style={{ overflow: 'visible' }}>
                 <path d="M 0 40 Q 40 20, 80 30" fill="none" stroke="#FDFBF7" strokeWidth="1.5" strokeLinecap="round" strokeDasharray="3 3" />
                 <path d="M 80 30 L 72 24 L 76 32 L 70 36 Z" fill="#FDFBF7" />
               </svg>
               <div className="font-hand" style={{ fontSize: 22, marginTop: -10, marginLeft: 10 }}>snow-dusted peaks</div>
             </div>
-            <div style={{ position: 'absolute', right: '6%', top: '30%', opacity: contentReveal, color: '#FDFBF7', textAlign: 'right' }}>
+            <div className="sun-annotation" style={{ position: 'absolute', right: '6%', top: '30%', opacity: contentReveal, color: '#FDFBF7', textAlign: 'right' }}>
               <div className="font-hand" style={{ fontSize: 22 }}>&lt; morning sun</div>
               <svg width="100" height="40" style={{ overflow: 'visible' }}>
                 <path d="M 10 10 Q 40 30, 90 20" fill="none" stroke="#FDFBF7" strokeWidth="1.5" strokeLinecap="round" strokeDasharray="3 3" />
               </svg>
             </div>
 
-            {/* Bottom polaroids */}
-            <div style={{ position: 'absolute', bottom: '6%', left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 30, padding: '0 5%' }}>
+            <div className="destination-photos">
               {[
-                { tilt: -6, caption: 'Mussoorie hills', emoji: '🏔' },
-                { tilt: 3, caption: 'Mindrolling Monastery', emoji: '☸' },
-                { tilt: -3, caption: 'Valley of flowers', emoji: '🌸' },
-              ].map((p, i) => {
-                const pp = remap(polaroidsIn, i * 0.15, 0.6 + i * 0.15);
-                return (
-                  <div key={i} style={{
-                    opacity: pp,
-                    transform: `translateY(${(1 - pp) * 80}px) rotate(${p.tilt}deg)`,
-                    transition: 'all 0.1s linear',
-                  }}>
-                    <Polaroid w={180} h={210} rotate={0} caption={p.caption}>
-                      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: i === 0 ? 'linear-gradient(180deg, #FCE4B0 0%, #6B4A3C 100%)' : i === 1 ? 'linear-gradient(180deg, #E8A568 0%, #8B4513 100%)' : 'linear-gradient(180deg, #F5C79B 0%, #5B6B4A 100%)' }}>
-                        <div style={{ fontSize: 48 }}>{p.emoji}</div>
-                      </div>
-                    </Polaroid>
-                  </div>
-                );
+                { src: 'assets/mussoorie.webp', caption: 'Mussoorie hills', alt: 'Green hills and hillside homes in Mussoorie', credit: 'Bibek2011 · CC BY-SA 4.0', source: 'https://commons.wikimedia.org/wiki/File:Beautiful_Mussoorie.jpg' },
+                { src: 'assets/mindrolling.webp', caption: 'Mindrolling Monastery', alt: 'The complete white and gold Great Stupa at Mindrolling Monastery in Dehradun', credit: 'Prashanthns · CC BY-SA 4.0', source: 'https://commons.wikimedia.org/wiki/File:Mindrolling_stupa_at_Dehradun.jpg' },
+                { src: 'assets/valley-of-flowers.webp', caption: 'Valley of Flowers', alt: 'A river through the green Valley of Flowers beneath Himalayan peaks', credit: 'Kp.vasant · CC BY-SA 4.0', source: 'https://commons.wikimedia.org/wiki/File:Valley_of_Flowers.jpg' },
+              ].map((photo, i) => {
+                const reveal = remap(polaroidsIn, i * .15, .6 + i * .15);
+                return <figure className="destination-photo" key={photo.src} style={{ opacity: reveal, transform: `translateY(${(1-reveal)*80}px) rotate(${[-6,3,-3][i]}deg)` }}>
+                  <img src={photo.src} alt={photo.alt} loading="lazy" decoding="async" />
+                  <figcaption className="font-hand">{photo.caption}</figcaption>
+                  <a className="photo-credit" href={photo.source} target="_blank" rel="noopener noreferrer">{photo.credit}</a>
+                </figure>;
               })}
             </div>
           </div>
 
         </div>
+        </PinnedCanvas>
       </div>
     </section>
   );
