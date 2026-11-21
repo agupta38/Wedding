@@ -20,9 +20,9 @@ The Google account that created these resources owns them. The response spreadsh
 
 ## Music
 
-Song buttons play real, licensed Apple Music previews (about 30 seconds) through a single native audio player, with play/pause, progress, volume, and error handling. Each row also links to a verified YouTube release for the full song. Full tracks are not hosted in this repository. YouTube refused embedded playback during browser QA, so the full tracks open on YouTube.
+Song buttons play real, licensed Apple Music previews (about 30 seconds) through a single native audio player, with play/pause, progress, volume, and error handling. Each row also links to the exact YouTube video selected for the full song. Full tracks are not hosted in this repository. YouTube refused embedded playback during browser QA, so the full tracks open on YouTube.
 
-The original “Jasmine Flower — A.R. Rahman” entry could not be matched to an official release. It is omitted from the active playlist pending a correct title or link, rather than pointing to an unrelated recording.
+The playlist follows the supplied order: Gallan Goodiyaan, London Thumakda, Poopol Poopol (Instrumental) from Minnalae, Morni from The Call of Panjab, and SLICK (Remix) with Don Toliver and Summer Walker. The previews use the matching soundtrack, EP, and remix recordings, rather than cover versions or alternate remixes.
 
 The active song data is in `scenes/Playlist.jsx`. `assets/songs.json` records the verified Apple catalogue IDs/preview URLs used for QA. If a preview URL is withdrawn, refresh it with Apple's iTunes Lookup API using the ID from its Apple Music link. The UI offers the full-song link if audio fails.
 

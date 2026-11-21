@@ -1,44 +1,44 @@
-// Licensed Apple Music previews; full songs open on their official YouTube pages.
+// Licensed Apple Music previews; full songs open on the selected YouTube videos.
 const weddingSongs = [
   {
-    "title": "Tum Se Hi",
-    "artist": "Pritam & Mohit Chauhan",
-    "note": "the one on the drive home",
-    "video": "mt9xg0mmt28",
-    "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e7/39/b8/e739b870-54a1-8f33-57d5-3817108b8bd9/mzaf_16925921654959290990.plus.aac.p.m4a",
-    "apple": "https://music.apple.com/in/album/tum-se-hi/1134725343?i=1134725347&uo=4"
+    "title": "Gallan Goodiyaan",
+    "artist": "Yashita Sharma, Manish Kumar Tipu, Farhan Akhtar, Shankar Mahadevan & Sukhwinder Singh",
+    "note": "everyone on the dance floor",
+    "video": "6Em4WhOh7uc",
+    "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/0a/b1/65/0ab165c2-5461-139b-3361-43d39f4f7f77/mzaf_13810064433892693288.plus.aac.p.m4a",
+    "apple": "https://music.apple.com/in/album/gallan-goodiyaan/1071191851?i=1071192712&uo=4"
   },
   {
-    "title": "Why This Kolaveri Di",
-    "artist": "Anirudh Ravichander & Dhanush",
-    "note": "hari made it iconic",
-    "video": "YR12Z8f1Dh8",
-    "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/1d/38/f4/1d38f427-0cd0-d96c-6f3d-af091bf795b7/mzaf_12602049532375607798.plus.aac.p.m4a",
-    "apple": "https://music.apple.com/in/album/why-this-kolaveri-di-3/520548806?i=520549421&uo=4"
+    "title": "London Thumakda",
+    "artist": "Labh Janjua, Sonu Kakkar & Neha Kakkar",
+    "note": "the sangeet starts here",
+    "video": "udra3Mfw2oo",
+    "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/04/f2/15/04f2159c-f378-3323-d3a0-c055474ec688/mzaf_11306147181651969029.plus.aac.p.m4a",
+    "apple": "https://music.apple.com/in/album/london-thumakda/1116194763?i=1116194835&uo=4"
   },
   {
-    "title": "Tum Hi Ho",
-    "artist": "Mithoon & Arijit Singh",
-    "note": "first dance contender",
-    "video": "Umqb9KENgmk",
-    "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/3a/8c/9b/3a8c9b0b-2def-750a-f615-1555bf941edf/mzaf_17229496441442805917.plus.aac.p.m4a",
-    "apple": "https://music.apple.com/in/album/tum-hi-ho/1073359412?i=1073359419&uo=4"
+    "title": "Poopol Poopol (Instrumental)",
+    "artist": "Harris Jayaraj, Tippu & Karthik",
+    "note": "a little minnale magic",
+    "video": "HTpJXEM-nmM",
+    "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/02/77/f0/0277f0dd-ab1a-36c8-24f6-6ad13f9e2ec4/mzaf_3423349995641888146.plus.aac.p.m4a",
+    "apple": "https://music.apple.com/in/album/poopol-poopol/1564309477?i=1564309488&uo=4"
   },
   {
-    "title": "Chaiyya Chaiyya",
-    "artist": "Sukhwinder Singh & Sapna Awasthi",
-    "note": "baraat certified banger",
-    "video": "PXacOfTi4uA",
-    "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/81/6c/e7/816ce721-3a37-0e57-3aa7-c3e180c4b38c/mzaf_10595670915474775723.plus.aac.p.m4a",
-    "apple": "https://music.apple.com/in/album/chaiyya-chaiyya/1130322055?i=1130322151&uo=4"
+    "title": "Morni",
+    "artist": "Diljit Dosanjh, Chani Nattan & Tru-Skool",
+    "note": "turn it up",
+    "video": "hRV1b4v1fso",
+    "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f5/6e/e4/f56ee414-2027-b605-7455-a24fbc433373/mzaf_3937962578481238111.plus.aac.p.m4a",
+    "apple": "https://music.apple.com/in/album/morni/1894792752?i=1894792753&uo=4"
   },
   {
-    "title": "Levitating",
-    "artist": "Dua Lipa",
-    "note": "the toronto era",
-    "video": "N000qglmmY0",
-    "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/59/dc/4d/59dc4dda-93ff-8f1c-c536-f005f6ea6af5/mzaf_3066686759813252385.plus.aac.p.m4a",
-    "apple": "https://music.apple.com/in/album/levitating/1538003494?i=1538003843&uo=4"
+    "title": "SLICK (Remix)",
+    "artist": "Victony, Don Toliver & Summer Walker",
+    "note": "the after-party mood",
+    "video": "ksnN8PMf30I",
+    "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f8/d4/10/f8d410ee-fb9f-e548-429b-c8833ce90623/mzaf_12877011975889179812.plus.aac.p.m4a",
+    "apple": "https://music.apple.com/us/album/slick-feat-don-toliver-remix/6821146861?i=6821146865&uo=4"
   }
 ];
 
