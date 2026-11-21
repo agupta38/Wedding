@@ -20,7 +20,7 @@ The Google account that created these resources owns them. The response spreadsh
 
 ## Music
 
-Song buttons play real, licensed Apple Music previews (about 30 seconds) through a single native audio player, with play/pause, progress, volume, and error handling. Each row also links to the exact YouTube video selected for the full song. Full tracks are not hosted in this repository. YouTube refused embedded playback during browser QA, so the full tracks open on YouTube.
+The soundtrack attempts to start on page load, cycles the five licensed Apple Music previews (about 30 seconds each) in order, and loops back to the first. Browsers that block audible autoplay start on the first page tap, Enter/Space, or the floating “Play music” button. A small fixed side button mutes/unmutes the soundtrack and remembers the mute preference on this device. One native audio player handles all tracks, with play/pause, progress, volume, and error handling; manually choosing a song continues the loop from that song. Unavailable previews are skipped, with retries bounded to one pass through the playlist. Each row also links to the exact YouTube video selected for the full song. Full tracks are not hosted in this repository. YouTube refused embedded playback during browser QA, so the full tracks open on YouTube.
 
 The playlist follows the supplied order: Gallan Goodiyaan, London Thumakda, Poopol Poopol (Instrumental) from Minnalae, Morni from The Call of Panjab, and SLICK (Remix) with Don Toliver and Summer Walker. The previews use the matching soundtrack, EP, and remix recordings, rather than cover versions or alternate remixes.
 
@@ -44,3 +44,7 @@ node --test tests/scroll-runtime.test.cjs
 The tests cover Safari URL-bar height changes, elastic overscroll, coalescing scroll events into one animation-frame update, cached scene geometry, reverse scrolling, and cleanup. Browser QA also checks all five pinned scenes in WebKit with an iPhone-sized viewport, Android-sized Chromium, and desktop Chromium.
 
 Scroll geometry uses the scenes’ stable `100svh` height. Layout is remeasured after resize, font loading, and observed size changes, rather than on every scroll event. Heavy static skyline/mountain artwork is memoized, and the sunrise uses static gradient layers plus opacity and transform animation.
+
+## Soundtrack regression checks
+
+Run `node --test tests/soundtrack.test.cjs` to check autoplay fallback, playlist wrapping, persistent mute, manual pause/selection, bounded failure recovery, and cleanup. Playback control is in `components/soundtrack.js`; the playlist and floating control share the same audio element.

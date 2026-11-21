@@ -43,55 +43,46 @@ const weddingSongs = [
 ];
 
 const PlaylistScene = () => {
-  const [selected, setSelected] = React.useState(null);
-  const [status, setStatus] = React.useState('Choose a song for an audio preview.');
-  const [isPlaying, setIsPlaying] = React.useState(false);
+  const [playback, setPlayback] = React.useState({ selected: 0, status: 'Loading audio preview…', isPlaying: false, muted: false, needsGesture: false });
+  const { selected, status, isPlaying, muted, needsGesture } = playback;
   const audio = React.useRef(null);
-  const selectedRef = React.useRef(null);
-  const requestRef = React.useRef(0);
+  const player = React.useRef(null);
 
   React.useEffect(() => {
-    const element = audio.current;
-    return () => { requestRef.current += 1; element.pause(); };
+    let storage;
+    try { storage = window.localStorage; } catch (_) {}
+    const soundtrack = createWeddingSoundtrack({ audio: audio.current, songs: weddingSongs, eventTarget: document, storage, onChange: setPlayback });
+    player.current = soundtrack;
+    soundtrack.start();
+    return () => { soundtrack.destroy(); player.current = null; };
   }, []);
 
-  const chooseSong = async (index) => {
-    const element = audio.current;
-    if (selectedRef.current === index && !element.paused) {
-      element.pause();
-      return;
-    }
-    const request = ++requestRef.current;
-    if (selectedRef.current !== index) {
-      element.pause();
-      selectedRef.current = index;
-      setSelected(index);
-      element.src = weddingSongs[index].preview;
-      element.load();
-    }
-    setStatus('Loading audio preview…');
-    try {
-      await element.play();
-    } catch (error) {
-      if (request !== requestRef.current || error.name === 'AbortError') return;
-      setIsPlaying(false);
-      setStatus(error.name === 'NotAllowedError' ? 'Tap play in the audio controls to start.' : 'Audio could not load. Listen to the full song on YouTube below.');
-    }
-  };
+  const needsPlay = needsGesture || status === 'Paused' || status.startsWith('Audio previews are unavailable');
+  const musicAction = muted ? 'Unmute music' : needsPlay ? 'Play music' : 'Mute music';
 
   return (
+    <>
+    <button type="button" className="soundtrack-toggle" data-soundtrack-control aria-label={musicAction} aria-pressed={muted} aria-controls="wedding-audio" title={musicAction} onClick={() => player.current?.toggleMuted()}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        {musicAction === 'Play music' ? <path d="m8 5 11 7-11 7V5Z" /> : <>
+          <path d="M11 5 6 9H3v6h3l5 4V5Z" />
+          {muted ? <path d="m17 9 5 6m0-6-5 6" /> : <><path d="M15 8a6 6 0 0 1 0 8" /><path d="M18 5a10 10 0 0 1 0 14" /></>}
+        </>}
+      </svg>
+      <span>{musicAction === 'Play music' ? 'Play music' : muted ? 'Muted' : 'Music on'}</span>
+    </button>
     <section id="scene-playlist" className="scene" data-screen-label="09 Playlist" style={{ padding: '10vh 5vw', background: 'var(--cream)' }}>
       <div style={{ maxWidth: 900, margin: '0 auto' }}>
         <header className="scene-heading" style={{ textAlign: 'left', marginBottom: 32 }}>
           <div className="eyebrow">Chapter Six</div>
           <h2 className="font-display">The <span>soundtrack</span></h2>
           <p className="font-hand">a playlist, mostly curated by aarushi</p>
-          <p className="playlist-help">Tap play for an audio preview. Open YouTube for the full song.</p>
+          <p className="playlist-help">The previews play in a loop. Use the side button to mute, or open YouTube for a full song.</p>
         </header>
         <div className="playlist-list">
           {weddingSongs.map((song, i) => (
             <div className={`song-row ${selected === i && isPlaying ? 'is-playing' : ''}`} key={song.video}>
-              <button className="song-play" onClick={() => chooseSong(i)} aria-label={`${selected === i && isPlaying ? 'Pause' : 'Play preview of'} ${song.title}`} aria-pressed={selected === i && isPlaying} aria-controls="wedding-audio">
+              <button className="song-play" data-soundtrack-control onClick={() => player.current?.choose(i)} aria-label={`${selected === i && isPlaying ? 'Pause' : 'Play preview of'} ${song.title}`} aria-pressed={selected === i && isPlaying} aria-controls="wedding-audio">
                 <span aria-hidden="true">{selected === i && isPlaying ? '❚❚' : '▶'}</span>
               </button>
               <div><div className="font-display song-title">{song.title}</div><div className="song-artist">{song.artist}</div><div className="font-hand song-note">{song.note}</div></div>
@@ -99,19 +90,15 @@ const PlaylistScene = () => {
             </div>
           ))}
         </div>
-        <div className="music-player" hidden={selected === null}>
-          <p className="music-status" role="status" aria-live="polite">{selected !== null && <strong>{weddingSongs[selected].title} · </strong>}{status}</p>
-          <audio id="wedding-audio" ref={audio} controls preload="none" aria-label={selected === null ? 'Wedding song preview player' : `${weddingSongs[selected].title} audio preview`}
-            onPlaying={() => { setIsPlaying(true); setStatus('Playing audio preview'); }}
-            onPause={() => { setIsPlaying(false); setStatus('Paused'); }}
-            onWaiting={() => { setIsPlaying(false); setStatus('Loading audio preview…'); }}
-            onEnded={() => { setIsPlaying(false); setStatus('Preview finished. Open YouTube for the full song.'); }}
-            onError={() => { setIsPlaying(false); setStatus('Audio could not load. Listen to the full song on YouTube below.'); }} />
-          {selected !== null && <p className="music-credit">Preview courtesy of <a href={weddingSongs[selected].apple} target="_blank" rel="noopener noreferrer">Apple Music</a> · <a href={`https://www.youtube.com/watch?v=${weddingSongs[selected].video}`} target="_blank" rel="noopener noreferrer">Full song on YouTube</a></p>}
+        <div className="music-player">
+          <p className="music-status" role="status" aria-live="polite"><strong>{weddingSongs[selected].title} · </strong>{status}</p>
+          <audio id="wedding-audio" ref={audio} controls playsInline preload="auto" data-soundtrack-control aria-label={`${weddingSongs[selected].title} audio preview`} />
+          <p className="music-credit">Preview courtesy of <a href={weddingSongs[selected].apple} target="_blank" rel="noopener noreferrer">Apple Music</a> · <a href={`https://www.youtube.com/watch?v=${weddingSongs[selected].video}`} target="_blank" rel="noopener noreferrer">Full song on YouTube</a></p>
         </div>
         <p className="font-hand" style={{ textAlign: 'center', marginTop: 24, fontSize: 24 }}>song requests? bring them to the sangeet.</p>
       </div>
     </section>
+    </>
   );
 };
 window.PlaylistScene = PlaylistScene;
