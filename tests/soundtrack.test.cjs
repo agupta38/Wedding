@@ -94,3 +94,24 @@ test('a saved mute remains silent when autoplay also requires a gesture', async 
   assert.equal(app.state.isPlaying, true); assert.equal(app.audio.muted, true);
   app.player.toggleMuted(); assert.equal(app.audio.muted, false); app.player.destroy();
 });
+
+for (const [type, properties] of [
+  ['pointerdown', { pointerType: 'mouse' }],
+  ['pointerup', { pointerType: 'touch' }],
+  ['touchend', {}],
+  ['keydown', { key: 'ArrowDown' }],
+]) {
+  test(`blocked playback starts on the first ${type} interaction without the music button`, async () => {
+    const app = setup({ blocked: true }); app.player.start(); await tick(); app.allow();
+    const event = new Event(type); Object.assign(event, properties); app.gestures.dispatchEvent(event); await tick();
+    assert.equal(app.state.isPlaying, true); assert.equal(app.state.needsGesture, false);
+    app.player.destroy();
+  });
+}
+
+test('scroll events and browser shortcuts do not retry playback', async () => {
+  const app = setup({ blocked: true }); app.player.start(); await tick(); const plays = app.audio.plays;
+  app.gestures.dispatchEvent(new Event('scroll'));
+  const event = new Event('keydown'); Object.assign(event, { key: 'r', ctrlKey: true }); app.gestures.dispatchEvent(event); await tick();
+  assert.equal(app.audio.plays, plays); app.player.destroy();
+});

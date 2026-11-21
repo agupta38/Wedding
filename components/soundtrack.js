@@ -78,13 +78,19 @@ window.createWeddingSoundtrack = ({ audio, songs, eventTarget, storage, onChange
   Object.entries(events).forEach(([name, handler]) => audio.addEventListener(name, handler));
   const onGesture = event => {
     if (!state.needsGesture || !wantsPlayback || disposed) return;
-    if (event.type === 'keydown' && !['Enter', ' '].includes(event.key)) return;
+    if (event.type === 'pointerdown' && event.pointerType !== 'mouse') return;
+    if (event.type === 'pointerup' && event.pointerType === 'mouse') return;
+    if (event.type === 'keydown' && (event.ctrlKey || event.metaKey || event.altKey || event.repeat ||
+      ['Escape', 'Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'NumLock', 'PrintScreen'].includes(event.key))) return;
     // Music controls handle their own tap; a second retry would undo a pause/mute.
     if (event.target?.closest?.('[data-soundtrack-control]')) return;
     playIndex(state.selected);
   };
-  eventTarget.addEventListener('click', onGesture);
-  eventTarget.addEventListener('keydown', onGesture);
+  // Capture the browser's activation event even if a child stops bubbling.
+  // A wheel/scroll event does not grant audible playback permission.
+  const gestureEvents = ['click', 'pointerdown', 'pointerup', 'touchend', 'keydown'];
+  const gestureOptions = { capture: true, passive: true };
+  gestureEvents.forEach(name => eventTarget.addEventListener(name, onGesture, gestureOptions));
 
   return {
     start() { update({}); playIndex(0); },
@@ -118,8 +124,7 @@ window.createWeddingSoundtrack = ({ audio, songs, eventTarget, storage, onChange
       request++;
       wantsPlayback = false;
       Object.entries(events).forEach(([name, handler]) => audio.removeEventListener(name, handler));
-      eventTarget.removeEventListener('click', onGesture);
-      eventTarget.removeEventListener('keydown', onGesture);
+      gestureEvents.forEach(name => eventTarget.removeEventListener(name, onGesture, gestureOptions));
       audio.pause();
       audio.removeAttribute('src');
       audio.load();
