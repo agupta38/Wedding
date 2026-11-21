@@ -1,55 +1,6 @@
-// Scene 6: Dehradun — Himalayan arrival
-const DehradunScene = () => {
-  const ref = React.useRef(null);
-  const progress = usePinnedProgress(ref);
-
-  const sunRise = remap(progress, 0.0, 0.4);
-  const mountainsRise = remap(progress, 0.1, 0.5);
-  const contentReveal = remap(progress, 0.35, 0.7);
-  const polaroidsIn = remap(progress, 0.5, 0.9);
-
-  return (
-    <section ref={ref} id="scene-dehradun" className="scene scene-tall dehradun-scene animated-scene" data-screen-label="06 Dehradun" data-scroll-progress={progress}>
-      <div className="sticky-wrap">
-        <PinnedCanvas className="dehradun-canvas">
-        <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
-
-          {/* Sky - sunrise gradient */}
-          <div style={{
-            position: 'absolute', inset: 0,
-            background: `linear-gradient(180deg,
-              #2C1810 0%,
-              #6B3B2A ${20 - sunRise*15}%,
-              #C87A4A ${40 - sunRise*10}%,
-              #E8A568 ${60 - sunRise*10}%,
-              #F5C79B ${80 - sunRise*5}%,
-              #FCE4B0 100%)`,
-          }} />
-
-          {/* Sun */}
-          <div style={{
-            position: 'absolute',
-            left: '65%', top: `${50 - sunRise * 25}%`,
-            transform: 'translate(-50%, -50%)',
-            opacity: sunRise,
-            width: 160, height: 160,
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, #FFE4A1 0%, #E8833A 60%, transparent 80%)',
-            filter: 'blur(1px)',
-          }} />
-          <div style={{
-            position: 'absolute',
-            left: '65%', top: `${50 - sunRise * 25}%`,
-            transform: 'translate(-50%, -50%)',
-            opacity: sunRise,
-            width: 90, height: 90,
-            borderRadius: '50%',
-            background: '#FFDD80',
-            boxShadow: '0 0 60px 30px rgba(255, 221, 128, 0.5)',
-          }} />
-
-          {/* Himalayas layered */}
-          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, transform: `translateY(${(1 - mountainsRise) * 100}px)`, transition: 'transform 0.1s linear' }}>
+// Static SVG detail stays out of the per-frame React render work.
+const HimalayanLayers = React.memo(() => (
+  <>
             {/* Far layer */}
             <svg viewBox="0 0 1400 400" preserveAspectRatio="none" style={{ width: '100%', height: '360px', display: 'block', position: 'absolute', bottom: '10%' }}>
               <path d="M0 400 L 120 160 L 200 240 L 310 100 L 410 220 L 520 140 L 640 200 L 760 80 L 880 180 L 1000 120 L 1120 200 L 1240 130 L 1400 200 L 1400 400 Z" fill="#6B4A3C" opacity="0.6" />
@@ -79,6 +30,53 @@ const DehradunScene = () => {
                 );
               })}
             </svg>
+  </>
+));
+
+// Scene 6: Dehradun — Himalayan arrival
+const DehradunScene = () => {
+  const ref = React.useRef(null);
+  const progress = usePinnedProgress(ref);
+
+  const sunRise = remap(progress, 0.0, 0.4);
+  const mountainsRise = remap(progress, 0.1, 0.5);
+  const contentReveal = remap(progress, 0.35, 0.7);
+  const polaroidsIn = remap(progress, 0.5, 0.9);
+
+  return (
+    <section ref={ref} id="scene-dehradun" className="scene scene-tall dehradun-scene animated-scene" data-screen-label="06 Dehradun" data-scroll-progress={progress}>
+      <div className="sticky-wrap">
+        <PinnedCanvas className="dehradun-canvas">
+        <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
+
+          <div className="sunrise-sky sunrise-night" />
+          <div className="sunrise-sky sunrise-day" style={{ opacity: sunRise }} />
+
+          {/* Sun */}
+          <div className="sunrise-sun" style={{
+            position: 'absolute',
+            left: '65%', top: '50%',
+            transform: `translate3d(-50%, calc(-50% - var(--canvas-height) * ${sunRise * .25}), 0)`,
+            opacity: sunRise,
+            width: 160, height: 160,
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, #FFE4A1 0%, #E8833A 60%, transparent 80%)',
+            filter: 'blur(1px)',
+          }} />
+          <div className="sunrise-sun" style={{
+            position: 'absolute',
+            left: '65%', top: '50%',
+            transform: `translate3d(-50%, calc(-50% - var(--canvas-height) * ${sunRise * .25}), 0)`,
+            opacity: sunRise,
+            width: 90, height: 90,
+            borderRadius: '50%',
+            background: '#FFDD80',
+            boxShadow: '0 0 60px 30px rgba(255, 221, 128, 0.5)',
+          }} />
+
+          {/* Himalayas layered */}
+          <div className="himalayan-layers" style={{ position: 'absolute', bottom: 0, left: 0, right: 0, transform: `translateY(${(1 - mountainsRise) * 100}px)`, transition: 'transform 0.1s linear' }}>
+            <HimalayanLayers />
           </div>
 
           {/* Content */}

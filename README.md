@@ -31,3 +31,16 @@ The active song data is in `scenes/Playlist.jsx`. `assets/songs.json` records th
 The same scroll-driven, pinned sequences run on desktop and mobile: the Bumble/Hinge match, Toronto skyline and polaroids, flight path, Two States split panels and comparisons, and Dehradun sunrise, mountains, and photos. A viewport-fit canvas and compact layouts keep the compositions inside narrow/short screens without disabling animation. Countdown cards use a two-by-two grid on phones. The countdown is anchored to Indian Standard Time.
 
 Destination photographs are local optimized WebP files; see [photo credits](assets/CREDITS.md).
+
+
+## Scroll performance regression checks
+
+Run the dependency-free Node checks with:
+
+```sh
+node --test tests/scroll-runtime.test.cjs
+```
+
+The tests cover Safari URL-bar height changes, elastic overscroll, coalescing scroll events into one animation-frame update, cached scene geometry, reverse scrolling, and cleanup. Browser QA also checks all five pinned scenes in WebKit with an iPhone-sized viewport, Android-sized Chromium, and desktop Chromium.
+
+Scroll geometry uses the scenes’ stable `100svh` height. Layout is remeasured after resize, font loading, and observed size changes, rather than on every scroll event. Heavy static skyline/mountain artwork is memoized, and the sunrise uses static gradient layers plus opacity and transform animation.

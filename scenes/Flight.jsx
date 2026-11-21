@@ -17,13 +17,11 @@ const FlightScene = () => {
 
   // Plane position along path
   const planeProgress = remap(progress, 0.15, 0.85);
-  const [planePos, setPlanePos] = React.useState({ x: 180, y: 180, angle: -30 });
-  React.useEffect(() => {
-    if (!pathRef.current || !pathLen) return;
+  const planePos = React.useMemo(() => {
+    if (!pathRef.current || !pathLen) return { x: 180, y: 180, angle: -30 };
     const pt = pathRef.current.getPointAtLength(pathLen * planeProgress);
     const pt2 = pathRef.current.getPointAtLength(Math.min(pathLen, pathLen * planeProgress + 1));
-    const ang = Math.atan2(pt2.y - pt.y, pt2.x - pt.x) * 180 / Math.PI;
-    setPlanePos({ x: pt.x, y: pt.y, angle: ang });
+    return { x: pt.x, y: pt.y, angle: Math.atan2(pt2.y - pt.y, pt2.x - pt.x) * 180 / Math.PI };
   }, [planeProgress, pathLen]);
 
   return (

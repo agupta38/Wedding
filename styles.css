@@ -184,9 +184,11 @@ body::after {
 }
 .progress-bar-fill {
   height: 100%;
-  width: 0%;
+  width: 100%;
   background: linear-gradient(90deg, var(--marigold), var(--rose), var(--gold));
-  transition: width 0.1s linear;
+  transform: scaleX(0);
+  transform-origin: left;
+  will-change: transform;
 }
 
 /* ==================== Nav dots ==================== */
@@ -603,3 +605,28 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 }
 /* Let the animated skyline share the scene's continuous sunset sky. */
 .toronto-panorama .toronto-skyline > rect { fill: transparent; }
+
+/* Scroll positions already interpolate once per frame. CSS transitions here
+   would restart on every update and make Safari lag behind touch scrolling. */
+.animated-scene [style*="transition"],
+#scene-hero h1 span,
+#scene-savedate > div,
+#scene-savedate .save-date-seal { transition: none !important; }
+.pinned-canvas { contain: layout paint; }
+.animated-scene.is-scroll-active .animation-canvas { will-change: transform; }
+.animated-scene.is-scroll-active .toronto-memory,
+.animated-scene.is-scroll-active .toronto-ticket,
+.animated-scene.is-scroll-active .destination-photo,
+.animated-scene.is-scroll-active .himalayan-layers,
+.animated-scene.is-scroll-active .sunrise-sun { will-change: transform, opacity; }
+.sunrise-sky { position: absolute; inset: 0; }
+.sunrise-night { background: linear-gradient(180deg,#2C1810 0%,#6B3B2A 20%,#C87A4A 40%,#E8A568 60%,#F5C79B 80%,#FCE4B0 100%); }
+.sunrise-day { background: linear-gradient(180deg,#2C1810 0%,#6B3B2A 5%,#C87A4A 30%,#E8A568 50%,#F5C79B 75%,#FCE4B0 100%); }
+.animated-scene.is-scroll-active .sunrise-day { will-change: opacity; }
+/* Avoid repeatedly sampling blurred backdrops on touch WebKit. The tape and
+   all the story animation remain; only these decorative paint effects change. */
+@supports (-webkit-touch-callout: none) {
+  .tape { backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .sunrise-sun { filter: none !important; }
+  body::after { mix-blend-mode: normal; }
+}

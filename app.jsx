@@ -16,28 +16,26 @@ const App = () => {
   // Progress bar
   React.useEffect(() => {
     const fill = document.getElementById('progressFill');
-    const handler = () => {
-      const h = document.documentElement;
-      const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight);
-      if (fill) fill.style.width = (scrolled * 100) + '%';
-
-      // Active dot
-      const scenes = document.querySelectorAll('.scene');
-      let current = 'scene-hero';
-      const vh = window.innerHeight;
-      scenes.forEach(s => {
-        const r = s.getBoundingClientRect();
-        if (r.top < vh * 0.5 && r.bottom > vh * 0.5) current = s.id;
-      });
-      setActiveScene(current);
-    };
-    handler();
-    window.addEventListener('scroll', handler, { passive: true });
-    window.addEventListener('resize', handler);
-    return () => {
-      window.removeEventListener('scroll', handler);
-      window.removeEventListener('resize', handler);
-    };
+    let current = 'scene-hero';
+    let previousProgress = -1;
+    return subscribeScrollFrame({
+      measure: frame => [...document.querySelectorAll('.scene')].map(scene => {
+        const rect = scene.getBoundingClientRect();
+        return { id: scene.id, top: rect.top + frame.scrollY, bottom: rect.bottom + frame.scrollY };
+      }),
+      update: (frame, scenes) => {
+        const distance = frame.documentHeight - frame.viewportHeight;
+        const progress = distance > 0 ? Math.max(0, Math.min(1, frame.scrollY / distance)) : 0;
+        if (fill && progress !== previousProgress) {
+          fill.style.transform = `scaleX(${progress})`;
+          previousProgress = progress;
+        }
+        const center = frame.scrollY + frame.viewportHeight * .5;
+        const scene = scenes.find(item => item.top <= center && item.bottom > center);
+        const next = scene ? scene.id : 'scene-hero';
+        if (next !== current) { current = next; setActiveScene(next); }
+      },
+    });
   }, []);
 
   // Nav dots active + click
@@ -98,21 +96,24 @@ const App = () => {
     return () => window.removeEventListener('message', msgHandler);
   }, []);
 
-  return (
-    <>
-      <HeroScene />
-      <BumbleScene />
-      <TorontoScene />
-      <FlightScene />
-      <TwoStatesScene />
-      <DehradunScene />
-      <SaveDateScene />
-      <CountdownScene />
-      <PlaylistScene />
-      <RSVPScene />
-    </>
-  );
+  return <WeddingStory />;
 };
+
+// Updating the navigation must not rerender every illustrated scene.
+const WeddingStory = React.memo(() => (
+  <>
+    <HeroScene />
+    <BumbleScene />
+    <TorontoScene />
+    <FlightScene />
+    <TwoStatesScene />
+    <DehradunScene />
+    <SaveDateScene />
+    <CountdownScene />
+    <PlaylistScene />
+    <RSVPScene />
+  </>
+));
 
 const root = ReactDOM.createRoot(document.getElementById('app'));
 root.render(<App />);

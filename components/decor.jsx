@@ -205,7 +205,7 @@ Object.assign(window, {
 });
 
 // View from Lake Ontario: SkyDome west of the tower, financial district east.
-const TorontoSkyline = () => (
+const TorontoSkyline = React.memo(() => (
   <svg className="toronto-skyline" viewBox="0 0 1200 500" role="img" aria-labelledby="toronto-skyline-title" preserveAspectRatio="xMidYMid meet">
     <title id="toronto-skyline-title">Toronto waterfront skyline with the CN Tower, Rogers Centre stadium and downtown towers</title>
     <defs>
@@ -250,7 +250,7 @@ const TorontoSkyline = () => (
       <text x="570" y="95">CN TOWER</text><path d="M558 101l-27 35" fill="none" stroke="#392a26" strokeDasharray="3 3"/>
     </g>
   </svg>
-);
+));
 window.TorontoSkyline = TorontoSkyline;
 
 // The same animation canvas on every device; only its layout/scale adapts.
@@ -259,7 +259,10 @@ const PinnedCanvas = ({ children, className = '', width = 1200, height = 800, mo
   const [size, setSize] = React.useState({ width, height });
   React.useLayoutEffect(() => {
     const element = host.current;
-    const measure = () => setSize({ width: element.clientWidth, height: element.clientHeight });
+    const measure = () => {
+      const next = { width: element.clientWidth, height: element.clientHeight };
+      setSize(current => current.width === next.width && current.height === next.height ? current : next);
+    };
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(element);
@@ -274,7 +277,7 @@ const PinnedCanvas = ({ children, className = '', width = 1200, height = 800, mo
   const canvasHeight = size.height / scale;
   return (
     <div ref={host} className="pinned-canvas">
-      <div className={`animation-canvas ${compact ? 'compact-canvas' : ''} ${className}`} data-canvas-scale={scale} style={{ width: canvasWidth, height: canvasHeight, '--canvas-scale': scale, transform: `scale(${scale})` }}>
+      <div className={`animation-canvas ${compact ? 'compact-canvas' : ''} ${className}`} data-canvas-scale={scale} style={{ width: canvasWidth, height: canvasHeight, '--canvas-scale': scale, '--canvas-height': `${canvasHeight}px`, transform: `scale(${scale})` }}>
         {children}
       </div>
     </div>
